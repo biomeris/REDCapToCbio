@@ -1,0 +1,205 @@
+{
+  "PATIENT_ID": {
+    "Attribute type": "CLINICAL",
+    "Display name": "Patient Identifier",
+    "Description": "Patient identifier",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "REDCap Field name": "record_id"
+  },
+  "GENDER": {
+    "Attribute type": "PATIENT",
+    "Display name": "Person Gender",
+    "Description": "Patient gender.",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "REDCap Field name": "genere",
+    "Values": {
+      "0": "Male",
+      "1": "Female"
+    }
+  },
+  "AGE_REGISTRATION": {
+    "Attribute type": "PATIENT",
+    "Display name": "Age at registration of the study",
+    "Description": "Age at registration of the study",
+    "Datatype": "NUMBER",
+    "Priority": 1,
+    "REDCap Field name": "eta_arruolamento"
+  },
+  "TUMOR_BEHAVIOR": {
+    "Attribute type": "PATIENT",
+    "Display name": "ICD-O behavior",
+    "Description": "ICD-O behavior classification",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "REDCap Field name": "paziente_comportamento",
+    "Values": {
+      "0": "Benign",
+      "1": "Unspecified, borderline or uncertain behaviour",
+      "2": "Carcinoma in situ",
+      "3": "Malignant, primary",
+      "9": "Malignant, uncertain whether primary or metastatic",
+      "11": "Non-tumoral",
+      "12": "Not yet available"
+    }
+  },
+  "TUMOR_SITE": {
+    "Attribute type": "PATIENT",
+    "Display name": "Tumor Site ICD-O",
+    "Description": "Tumor Site according to ICD-O classification",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "REDCap Field name": "topografia"
+  },
+  "TUMOR_MORPHOLOGY": {
+    "Attribute type": "PATIENT",
+    "Display name": "Tumor Morphology",
+    "Description": "Tumor Morphology",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "REDCap Field name": "morfologia"
+  },
+  "TUMOR_GRADE": {
+    "Attribute type": "PATIENT",
+    "Display name": "Tumor Grade",
+    "Description": "Histologic grading criteria of Tumors",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "REDCap Field name": "paziente_grado",
+    "Values": {
+      "1": "Well-differentiated (G1)",
+      "2": "Moderately differentiated (G2)",
+      "3": "Poorly differentiated (G3)",
+      "4": "Undifferentiated (G4)",
+      "9": "Undetermined (Gx)"
+    }
+  },
+  "TREATMENT": {
+    "Attribute type": "PATIENT",
+    "Display name": "Treatment",
+    "Description": "Treatment",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "REDCap Field name": "terapia_tipo",
+    "Values": {
+      "1": "Surgery",
+      "2": "Radiotherapy",
+      "3": "Chemotherapy"
+    }
+  },
+  "START_DATE": {
+    "Attribute type": "PATIENT",
+    "Display name": "Start Date",
+    "Description": "The start date of a treatment(days)",
+    "Datatype": "NUMBER",
+    "Priority": 1,
+    "REDCap Field name": "terapia_data_inizio",
+    "Datediff": {
+      "start": "data_diagnosi",
+      "end": "terapia_data_inizio",
+      "unit": "days"
+    }
+  },
+  "STOP_DATE": {
+    "Attribute type": "PATIENT",
+    "Display name": "Stop Date",
+    "Description": "The last date of the of the treatment(days)",
+    "Datatype": "NUMBER",
+    "Priority": 1,
+    "REDCap Field name": "terapia_data_fine",
+    "Datediff": {
+      "start": "data_diagnosi",
+      "end": "terapia_data_fine",
+      "unit": "days"
+    }
+  },
+  "STOP_REASON": {
+    "Attribute type": "PATIENT",
+    "Display name": "Stop Reason",
+    "Description": "Reason for termination of treatment ",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "REDCap Field name": "motivo_fine_terapia",
+    "Values": {
+      "1": "Completion",
+      "2": "Disease progression",
+      "3": "Toxicity",
+      "4": "Other"
+    }
+  },
+  "RADIATION_THERAPY_DOSE": {
+    "Attribute type": "PATIENT",
+    "Display name": "Radiation therapy dose",
+    "Description": "Radiation therapy administered dose (Gy)",
+    "Datatype": "NUMBER",
+    "Priority": 1,
+    "REDCap Field name": "rt_dose_totale"
+  },
+  "OS_MONTHS": {
+    "Attribute type": "PATIENT",
+    "Display name": "Overall Survival (Months)",
+    "Description": "Overall survival in months since initial diagonosis.",
+    "Datatype": "NUMBER",
+    "Priority": 1,
+    "REDCap Field name": "fu_data",
+    "Datediff": {
+      "start": "data_diagnosi",
+      "end": "fu_data",
+      "unit": "months"
+    }
+  },
+  "OS_STATUS": {
+    "Attribute type": "PATIENT",
+    "Display name": "Overall Survival Status",
+    "Description": "Overall patient survival status.",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "REDCap Field name": "fu_stato",
+    "Values": {
+      "0": "0:LIVING",
+      "1": "1:DECEASED"
+    }
+  },
+  "DFS_MONTHS": {
+    "Attribute type": "PATIENT",
+    "Display name": "Disease Free (Months)",
+    "Description": "Disease free in months since treatment",
+    "Datatype": "NUMBER",
+    "Priority": 1,
+    "REDCap Field name": "fu_data",
+    "Datediff": {
+      "start": "terapia_data_inizio",
+      "end": "fu_data",
+      "unit": "months",
+      "logic": "fu_stato == 1"
+    }
+  },
+  "DFS_STATUS": {
+    "Attribute type": "PATIENT",
+    "Display name": "Disease Free Status",
+    "Description": "Disease free status",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "REDCap Field name": "fu_stato_malattia",
+    "Values": {
+      "1": "0:DiseaseFree",
+      "2": "1:Recurred/Progressed",
+      "3": "1:Recurred/Progressed",
+      "4": "1:Recurred/Progressed"
+    }
+  },
+  "PATIENT_DEATH_REASON": {
+    "Attribute type": "PATIENT",
+    "Display name": "Patient Death Reason",
+    "Description": "Text term to identify the cause of death for a patient.",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "REDCap Field name": "decesso_causa",
+    "Values": {
+      "1": "Dead of Disease (DOD)",
+      "2": "Dead of Other Cause (DOC)",
+      "3": "Dead of Unknown Cause (DUC)"
+    }
+  }
+}
