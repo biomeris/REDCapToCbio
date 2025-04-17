@@ -7,8 +7,6 @@
 #' @param mapping_file A JSON file that provides field-level mapping rules to convert REDCap data into a structure compatible with cBioPortal.
 #' @inheritParams .redcapToCbio
 #'
-#' @importFrom magrittr %>%
-#'
 #' @export
 #'
 #' @examples
@@ -97,8 +95,6 @@ createClinicalDataFiles <- function(study_folder, cancer_study_identifier, datat
 #' @inheritParams REDCapR::redcap_read
 #' @param redcap_cbio_mapping A list that contains field-level mapping rules to convert REDCap data into a structure compatible with cBioPortal.
 #' @param redcap_template A csv file with the REDCap data dictionary.
-#'
-#' @importFrom magrittr %>%
 #'
 #' @return A dataframe with data in cBioPortal format
 .redcapToCbio <- function(datatype = c("PATIENT_ATTRIBUTES", "SAMPLE_ATTRIBUTES"), redcap_uri, token, redcap_cbio_mapping, redcap_template = NULL) {
