@@ -15,12 +15,14 @@
 #' @export
 #'
 #' @examples
-#' createCancerTypeFiles(study_folder = tempdir(),
+#' createCancerTypeFiles(
+#'   study_folder = tempdir(),
 #'   type_of_cancer = "brca",
 #'   name = "Breast Invasive Carcinoma",
 #'   dedicated_color = "HotPink",
-#'   parent_type_of_cancer = "Breast")
-createCancerStudyMetafile <- function(study_folder, type_of_cancer, cancer_study_identifier, name, description, citation = NULL, pmid= NULL, groups = NULL, add_global_case_list = NULL, tags_file = NULL, reference_genome = NULL) {
+#'   parent_type_of_cancer = "Breast"
+#' )
+createCancerStudyMetafile <- function(study_folder, type_of_cancer, cancer_study_identifier, name, description, citation = NULL, pmid = NULL, groups = NULL, add_global_case_list = NULL, tags_file = NULL, reference_genome = NULL) {
   # Create list with all fields
   fields_list <- mget(c("type_of_cancer", "cancer_study_identifier", "name", "description", "citation", "pmid", "groups", "add_global_case_list", "tags_file", "reference_genome"), envir = environment())
 
@@ -29,7 +31,11 @@ createCancerStudyMetafile <- function(study_folder, type_of_cancer, cancer_study
 
   # Convert boolean values to lowercase string
   fields_list <- lapply(fields_list, function(x) {
-    if (is.logical(x)) return(tolower(as.character(x))) else return(x)
+    if (is.logical(x)) {
+      return(tolower(as.character(x)))
+    } else {
+      return(x)
+    }
   })
 
   # Convert list to array of strings

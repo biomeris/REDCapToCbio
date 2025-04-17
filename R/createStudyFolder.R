@@ -7,10 +7,10 @@
 #' @export
 #'
 #' @examples
-#' output_folder <- createStudyFolder(study_folder = "brca")
-createStudyFolder <- function(study_folder, output_path = getwd()){
+#' output_folder <- createStudyFolder(study_folder = "brca", output_path = tempdir())
+createStudyFolder <- function(study_folder, output_path = getwd()) {
   # Create folder if does not exists
-  if(!file.exists(file.path(output_path, study_folder))) {
+  if (!file.exists(file.path(output_path, study_folder))) {
     dir.create(file.path(output_path, study_folder), recursive = TRUE)
     cat(sprintf("The directory '%s' has been successfully created!", study_folder))
   } else {
