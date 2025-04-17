@@ -18,5 +18,5 @@ The folder path.
 Create study folder
 }
 \examples{
-output_folder <- createStudyFolder(study_folder = "brca")
+output_folder <- createStudyFolder(study_folder = "brca", output_path = tempdir())
 }
