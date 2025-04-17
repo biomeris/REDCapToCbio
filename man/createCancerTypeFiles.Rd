@@ -30,9 +30,11 @@ createCancerTypeFiles(
 Create Cancer Type Meta File and Data File
 }
 \examples{
-createCancerTypeFiles(study_folder = tempdir(),
+createCancerTypeFiles(
+  study_folder = tempdir(),
   type_of_cancer = "brca",
   name = "Breast Invasive Carcinoma",
   dedicated_color = "HotPink",
-  parent_type_of_cancer = "Breast")
+  parent_type_of_cancer = "Breast"
+)
 }
