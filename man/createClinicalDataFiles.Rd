@@ -41,11 +41,13 @@ project.  Required.}
 Create Clinical Data Meta file and Data file
 }
 \examples{
+\dontrun{
 createClinicalDataFiles(
   study_folder = tempdir(),
   cancer_study_identifier = "brca_joneslab_2013",
   datatype = "PATIENT_ATTRIBUTES",
-  redcap_uri = Sys.getenv("RC_URI"),
-  token = Sys.getenv("TOKEN")
+  redcap_uri = "https://redcap-dev-2.ouhsc.edu/redcap/api/",
+  token = "9A068C425B1341D69E83064A2D273A70"
 )
+}
 }

@@ -18,5 +18,7 @@ The folder path.
 Create study folder
 }
 \examples{
+\dontrun{
 output_folder <- createStudyFolder(study_folder = "brca", output_path = tempdir())
+}
 }

@@ -10,6 +10,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' createCancerTypeFiles(
 #'   study_folder = tempdir(),
 #'   type_of_cancer = "brca",
@@ -17,6 +18,7 @@
 #'   dedicated_color = "HotPink",
 #'   parent_type_of_cancer = "Breast"
 #' )
+#' }
 createCancerTypeFiles <- function(study_folder, data_filename = "cancer_type.txt", type_of_cancer, name, dedicated_color, parent_type_of_cancer) {
   # Write meta data file
   lines <- c("genetic_alteration_type: CANCER_TYPE", "datatype: CANCER_TYPE", paste("data_filename", data_filename, sep = ": "))

@@ -7,7 +7,9 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' output_folder <- createStudyFolder(study_folder = "brca", output_path = tempdir())
+#' }
 createStudyFolder <- function(study_folder, output_path = getwd()) {
   # Create folder if does not exists
   if (!file.exists(file.path(output_path, study_folder))) {

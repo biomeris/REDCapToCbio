@@ -10,13 +10,15 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' createClinicalDataFiles(
 #'   study_folder = tempdir(),
 #'   cancer_study_identifier = "brca_joneslab_2013",
 #'   datatype = "PATIENT_ATTRIBUTES",
-#'   redcap_uri = Sys.getenv("RC_URI"),
-#'   token = Sys.getenv("TOKEN")
+#'   redcap_uri = "https://redcap-dev-2.ouhsc.edu/redcap/api/",
+#'   token = "9A068C425B1341D69E83064A2D273A70"
 #' )
+#' }
 createClinicalDataFiles <- function(study_folder, cancer_study_identifier, datatype = c("PATIENT_ATTRIBUTES", "SAMPLE_ATTRIBUTES"), data_filename = NULL, mapping_file = NULL, redcap_uri, token, redcap_template = NULL) {
   # Check if datatype matches allowed values
   datatype <- match.arg(datatype)
@@ -44,7 +46,7 @@ createClinicalDataFiles <- function(study_folder, cancer_study_identifier, datat
   # Extract and transform data from REDCap ----
   # Read mapping file and filter by attribute type (patient or sample)
   if (is.null(mapping_file)) {
-    mapping_file <- "./inst/minimal_dataset/clinical_data_attributes.json"
+    mapping_file <- system.file("minimal_dataset", "clinical_data_attributes.json", package = "REDCapToCbio")
   }
 
   redcap_cbio_mapping <- jsonlite::fromJSON(mapping_file)
@@ -105,7 +107,7 @@ createClinicalDataFiles <- function(study_folder, cancer_study_identifier, datat
   }
 
   if (is.null(redcap_template)) {
-    redcap_template <- "./inst/minimal_dataset/StandardTemplateCRO_DataDictionary.csv"
+    redcap_template <- system.file("minimal_dataset", "StandardTemplateCRO_DataDictionary.csv", package = "REDCapToCbio")
   }
 
   redcap_fields <- read.csv(file = redcap_template) %>% dplyr::pull(1)
@@ -170,7 +172,7 @@ createClinicalDataFiles <- function(study_folder, cancer_study_identifier, datat
   }
 
   cbio_data <- cbio_data %>%
-    dplyr::select(all_of(names(redcap_cbio_mapping)))
+    dplyr::select(dplyr::all_of(names(redcap_cbio_mapping)))
 
   return(cbio_data)
 }

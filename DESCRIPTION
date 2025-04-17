@@ -15,7 +15,8 @@ Imports:
     jsonlite,
     magrittr,
     purrr (>= 0.3.0),
-    REDCapR
+    REDCapR,
+    utils
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

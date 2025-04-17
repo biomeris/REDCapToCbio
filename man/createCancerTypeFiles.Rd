@@ -30,6 +30,7 @@ createCancerTypeFiles(
 Create Cancer Type Meta File and Data File
 }
 \examples{
+\dontrun{
 createCancerTypeFiles(
   study_folder = tempdir(),
   type_of_cancer = "brca",
@@ -37,4 +38,5 @@ createCancerTypeFiles(
   dedicated_color = "HotPink",
   parent_type_of_cancer = "Breast"
 )
+}
 }
