@@ -1,6 +1,14 @@
 ---
 title: "REDCapToCbio"
-output: rmarkdown::html_vignette
+author: |
+  <img src="img/logo-biomeris.png" width="150" style="border: none;">
+output:
+  pdf_document:
+    number_sections: yes
+    toc: yes
+  html_document:
+    number_sections: yes
+    toc: yes
 vignette: >
   %\VignetteIndexEntry{REDCapToCbio}
   %\VignetteEngine{knitr::rmarkdown}
@@ -14,6 +22,51 @@ knitr::opts_chunk$set(
 )
 ```
 
+R Installation
+===============
+
+```{r, eval = FALSE}
+install.packages("remotes")
+remotes::install_github("biomeris/REDCapToCbio")
+```
+
+Preparing Data for cBioPortal Import
+===============
+
+Load the package with the following command:
+
 ```{r setup}
 library(REDCapToCbio)
+```
+
+Format and prepare clinical data for cBioPortal integration:
+
+```{r, eval = FALSE}
+# Create study folder
+output_folder <- createStudyFolder(study_folder = "brca")
+
+# Define cancer study identifier
+cancer_study_identifier <- "brca_joneslab_2013"
+
+# Write Cancer Study metafile
+createCancerStudyMetafile(study_folder = output_folder,
+                          type_of_cancer = "brca",
+                          cancer_study_identifier = cancer_study_identifier,
+                          name = "Breast Cancer (Jones Lab 2013)",
+                          description = "Comprehensive profiling of 103 breast cancer samples.",
+                          add_global_case_list = TRUE)
+
+# Write Cancer Type meta file and data file
+createCancerTypeFiles(study_folder = output_folder,
+                      type_of_cancer = "brca",
+                      name = "Breast Invasive Carcinoma",
+                      dedicated_color = "HotPink",
+                      parent_type_of_cancer = "Breast")
+
+# Write Clinical Data meta file and data file
+createClinicalDataFiles(study_folder = output_folder,
+                        cancer_study_identifier = cancer_study_identifier,
+                        datatype = "PATIENT_ATTRIBUTES",
+                        redcap_uri = Sys.getenv("REDCAP_URI"),
+                        token = Sys.getenv("TOKEN"))
 ```
