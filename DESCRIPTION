@@ -1,6 +1,6 @@
 Package: REDCapToCbio
 Title: Formatting REDCap Data for cBioPortal Upload
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R: 
     person("Vittoria", "Ramella", , "vittoria.ramella@biomeris.it", role = c("aut", "cre"))
 Description: The package performs structured transformation of REDCap
