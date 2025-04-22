@@ -27,6 +27,14 @@
     "Priority": 1,
     "REDCap Field name": "eta_arruolamento"
   },
+  "DIAGNOSIS_DATE": {
+    "Attribute type": "PATIENT",
+    "Display name": "Date of diagnosis",
+    "Description": "Date when the tumor was first diagnosed.",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "REDCap Field name": "data_diagnosi"
+  },
   "TUMOR_BEHAVIOR": {
     "Attribute type": "PATIENT",
     "Display name": "ICD-O behavior",
@@ -188,6 +196,14 @@
       "3": "1:Recurred/Progressed",
       "4": "1:Recurred/Progressed"
     }
+  },
+  "DATE_OF_DEATH": {
+    "Attribute type": "PATIENT",
+    "Display name": "Date of Death",
+    "Description": "Date of Death",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "REDCap Field name": "decesso_data"
   },
   "PATIENT_DEATH_REASON": {
     "Attribute type": "PATIENT",
