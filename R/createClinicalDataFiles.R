@@ -126,6 +126,7 @@ createClinicalDataFiles <- function(study_folder, cancer_study_identifier, datat
     redcap_field <- redcap_cbio_mapping[[i]][["REDCap Field name"]]
     values_map <- redcap_cbio_mapping[[i]][["Values"]]
     date_map <- redcap_cbio_mapping[[i]][["Datediff"]]
+    condition_logic <- redcap_cbio_mapping[[i]][["Condition Logic"]]
 
     # Check that redcap_field exists in REDCap data
     if (!(redcap_field %in% names(cbio_data))) next
@@ -168,6 +169,12 @@ createClinicalDataFiles <- function(study_folder, cancer_study_identifier, datat
       # Case 3: copy the original value from REDCap
     } else {
       cbio_data[[i]] <- cbio_data[[redcap_field]]
+    }
+
+    # Apply Condition Logic
+    if (!is.null(condition_logic) && nzchar(condition_logic)) {
+      condition_mask <- with(cbio_data, eval(parse(text = condition_logic)))
+      cbio_data[[i]][!condition_mask] <- NA
     }
   }
 
