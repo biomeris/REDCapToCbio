@@ -176,11 +176,11 @@
     "Datatype": "NUMBER",
     "Priority": 1,
     "REDCap Field name": "fu_data",
+    "Condition Logic": "fu_stato == 1", 
     "Datediff": {
       "start": "terapia_data_inizio",
       "end": "fu_data",
-      "unit": "months",
-      "logic": "fu_stato == 1"
+      "unit": "months"
     }
   },
   "DFS_STATUS": {
