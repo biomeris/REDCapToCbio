@@ -226,3 +226,52 @@ redcapToCbio <- function(redcap_uri, token, mapping_file = NULL, redcap_template
 
   return(cbio_data)
 }
+
+
+
+
+
+#' Request an Access Token from an OAuth2 API
+#'
+#' Sends a POST request to an OAuth2-compatible API to retrieve an access token using
+#' the client credentials grant type.
+#'
+#' @param client_id The client ID provided by the API authorization server
+#' @param client_secret The client secret associated with the client ID
+#' @param token_url The URL of the token endpoint where the request should be sent
+#' @param ssl_verifypeer Whether to verify SSL certificates. Default is TRUE
+#'
+#' @return Character string containing the access token if the request is successful,
+#' or \code{NULL} if the request fails.
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' token <- requestAPIToken(
+#'   client_id = "your-client-id",
+#'   client_secret = "your-client-secret",
+#'   token_url = "https://example.com/oauth/token"
+#' )
+#' }
+requestAPIToken <- function(client_id, client_secret, token_url, ssl_verifypeer = TRUE) {
+  # Send POST request
+  response <- httr::POST(
+    url = token_url,
+    httr::authenticate(client_id, client_secret),
+    body = list(grant_type = "client_credentials"),
+    encode = "form",
+    config(ssl_verifypeer = ssl_verifypeer)
+  )
+
+  # Check response
+  if (httr::status_code(response) == 200) {
+    access_token <- httr::content(response)$access_token
+    cat("Authentication successful: access token retrieved.")
+  } else {
+    access_token <- NULL
+    cat(httr::content(response))
+  }
+
+  return(access_token)
+}
