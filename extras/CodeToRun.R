@@ -1,51 +1,9 @@
----
-title: "REDCapToCbio"
-author: |
-  <img src="img/logo-biomeris.png" width="150" style="border: none;">
-output:
-  pdf_document:
-    number_sections: yes
-    toc: yes
-  html_document:
-    number_sections: yes
-    toc: yes
-vignette: >
-  %\VignetteIndexEntry{REDCapToCbio}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
-
-R Installation
-===============
-
-```{r, eval = FALSE}
-install.packages("remotes")
-remotes::install_github("biomeris/REDCapToCbio")
-```
-
-Preparing Data for cBioPortal Import
-===============
-
-Load the package with the following command:
-
-```{r setup}
 library(REDCapToCbio)
-```
 
-Format and prepare clinical data for cBioPortal integration:
-
-```{r, eval = FALSE}
 # Create study folder
-output_folder <- createStudyFolder(study_folder = "brca")
+output_folder <- createStudyFolder(study_folder = "brca", output_path = "/path/to/folder")
 
-# Define cancer study identifier
+# Define global variables
 cancer_study_identifier <- "brca_joneslab_2013"
 
 # Write Cancer Study metafile
@@ -67,7 +25,7 @@ createCancerTypeFiles(study_folder = output_folder,
 # Export data from REDCap
 redcap_data <- redcapToCbio(
   redcap_uri = Sys.getenv("RC_URL"),
-  token = Sys.getenv("TOKEN")
+  token = Sys.getenv("TOKEN_897")
 )
 
 # Write files
@@ -77,4 +35,3 @@ createClinicalDataFiles(
   datatype = "PATIENT_ATTRIBUTES",
   clinical_data = redcap_data
 )
-```

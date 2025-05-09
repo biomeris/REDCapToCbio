@@ -8,11 +8,9 @@ createClinicalDataFiles(
   study_folder,
   cancer_study_identifier,
   datatype = c("PATIENT_ATTRIBUTES", "SAMPLE_ATTRIBUTES"),
+  clinical_data,
   data_filename = NULL,
-  mapping_file = NULL,
-  redcap_uri,
-  token,
-  redcap_template = NULL
+  mapping_file = NULL
 )
 }
 \arguments{
@@ -22,32 +20,29 @@ createClinicalDataFiles(
 
 \item{datatype}{'PATIENT_ATTRIBUTES' or 'SAMPLE_ATTRIBUTES'}
 
+\item{clinical_data}{A dataframe containing the clinical data}
+
 \item{data_filename}{The datafile name. Defaults to 'data_clinical_patient.txt' or 'data_clinical_sample.txt', depending on the datatype.}
 
-\item{mapping_file}{A JSON file that provides field-level mapping rules to convert REDCap data into a structure compatible with cBioPortal.}
-
-\item{redcap_uri}{The
-\href{https://en.wikipedia.org/wiki/Uniform_Resource_Identifier}{uri}/url
-of the REDCap server
-typically formatted as "https://server.org/apps/redcap/api/".
-Required.}
-
-\item{token}{The user-specific string that serves as the password for a
-project.  Required.}
-
-\item{redcap_template}{A csv file with the REDCap data dictionary.}
+\item{mapping_file}{A JSON file that provides field-level mapping rules to convert source data into a structure compatible with cBioPortal.}
 }
 \description{
 Create Clinical Data Meta file and Data file
 }
 \examples{
 \dontrun{
+# Return data from REDCap
+redcap_data <- redcapToCbio(
+  redcap_uri = "https://redcap-dev-2.ouhsc.edu/redcap/api/"
+  token = "9A068C425B1341D69E83064A2D273A70"
+)
+
+# Create clinical data files
 createClinicalDataFiles(
   study_folder = tempdir(),
   cancer_study_identifier = "brca_joneslab_2013",
   datatype = "PATIENT_ATTRIBUTES",
-  redcap_uri = "https://redcap-dev-2.ouhsc.edu/redcap/api/",
-  token = "9A068C425B1341D69E83064A2D273A70"
+  clinical_data = redcap_data
 )
 }
 }

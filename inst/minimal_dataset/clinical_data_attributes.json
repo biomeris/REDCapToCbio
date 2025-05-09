@@ -41,7 +41,7 @@
     "Description": "ICD-O behavior classification",
     "Datatype": "STRING",
     "Priority": 1,
-    "REDCap Field name": "paziente_comportamento",
+    "REDCap Field name": "comportamento",
     "Values": {
       "0": "Benign",
       "1": "Unspecified, borderline or uncertain behaviour",
@@ -74,7 +74,7 @@
     "Description": "Histologic grading criteria of Tumors",
     "Datatype": "STRING",
     "Priority": 1,
-    "REDCap Field name": "paziente_grado",
+    "REDCap Field name": "grado",
     "Values": {
       "1": "Well-differentiated (G1)",
       "2": "Moderately differentiated (G2)",
@@ -82,67 +82,6 @@
       "4": "Undifferentiated (G4)",
       "9": "Undetermined (Gx)"
     }
-  },
-  "TREATMENT": {
-    "Attribute type": "PATIENT",
-    "Display name": "Treatment",
-    "Description": "Treatment",
-    "Datatype": "STRING",
-    "Priority": 1,
-    "REDCap Field name": "terapia_tipo",
-    "Values": {
-      "1": "Surgery",
-      "2": "Radiotherapy",
-      "3": "Chemotherapy"
-    }
-  },
-  "START_DATE": {
-    "Attribute type": "PATIENT",
-    "Display name": "Start Date",
-    "Description": "The start date of a treatment(days)",
-    "Datatype": "NUMBER",
-    "Priority": 1,
-    "REDCap Field name": "terapia_data_inizio",
-    "Datediff": {
-      "start": "data_diagnosi",
-      "end": "terapia_data_inizio",
-      "unit": "days"
-    }
-  },
-  "STOP_DATE": {
-    "Attribute type": "PATIENT",
-    "Display name": "Stop Date",
-    "Description": "The last date of the of the treatment(days)",
-    "Datatype": "NUMBER",
-    "Priority": 1,
-    "REDCap Field name": "terapia_data_fine",
-    "Datediff": {
-      "start": "data_diagnosi",
-      "end": "terapia_data_fine",
-      "unit": "days"
-    }
-  },
-  "STOP_REASON": {
-    "Attribute type": "PATIENT",
-    "Display name": "Stop Reason",
-    "Description": "Reason for termination of treatment ",
-    "Datatype": "STRING",
-    "Priority": 1,
-    "REDCap Field name": "motivo_fine_terapia",
-    "Values": {
-      "1": "Completion",
-      "2": "Disease progression",
-      "3": "Toxicity",
-      "4": "Other"
-    }
-  },
-  "RADIATION_THERAPY_DOSE": {
-    "Attribute type": "PATIENT",
-    "Display name": "Radiation therapy dose",
-    "Description": "Radiation therapy administered dose (Gy)",
-    "Datatype": "NUMBER",
-    "Priority": 1,
-    "REDCap Field name": "rt_dose_totale"
   },
   "OS_MONTHS": {
     "Attribute type": "PATIENT",
@@ -153,7 +92,7 @@
     "REDCap Field name": "fu_data",
     "Datediff": {
       "start": "data_diagnosi",
-      "end": "fu_data",
+      "end_date_logic": "coalesce(decesso_data,fu_data)",
       "unit": "months"
     }
   },
@@ -167,20 +106,6 @@
     "Values": {
       "0": "0:LIVING",
       "1": "1:DECEASED"
-    }
-  },
-  "DFS_MONTHS": {
-    "Attribute type": "PATIENT",
-    "Display name": "Disease Free (Months)",
-    "Description": "Disease free in months since treatment",
-    "Datatype": "NUMBER",
-    "Priority": 1,
-    "REDCap Field name": "fu_data",
-    "Condition Logic": "fu_stato == 1", 
-    "Datediff": {
-      "start": "terapia_data_inizio",
-      "end": "fu_data",
-      "unit": "months"
     }
   },
   "DFS_STATUS": {

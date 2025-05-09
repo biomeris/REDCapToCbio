@@ -16,6 +16,7 @@ Imports:
     magrittr,
     purrr (>= 0.3.0),
     REDCapR,
+    rlang,
     utils
 Suggests: 
     knitr,
