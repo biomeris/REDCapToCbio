@@ -57,9 +57,9 @@ createClinicalDataFiles <- function(study_folder, cancer_study_identifier, datat
   source_cbio_mapping <- jsonlite::fromJSON(mapping_file)
 
   if (datatype == "PATIENT_ATTRIBUTES") {
-    source_cbio_mapping <- purrr::keep(source_cbio_mapping, ~ .x$`Attribute type` %in% c("CLINICAL", "PATIENT"))
+    source_cbio_mapping <- purrr::keep(source_cbio_mapping, ~ .x$`Attribute type` == "PATIENT")
   } else if (datatype == "SAMPLE_ATTRIBUTES") {
-    source_cbio_mapping <- purrr::keep(source_cbio_mapping, ~ .x$`Attribute type` %in% c("CLINICAL", "SAMPLE"))
+    source_cbio_mapping <- purrr::keep(source_cbio_mapping, ~ .x$`Attribute type` == "SAMPLE")
   }
 
   display_names <- lapply(source_cbio_mapping, function(x) x[["Display name"]]) %>%
@@ -154,7 +154,7 @@ redcapToCbio <- function(redcap_uri, token, mapping_file = NULL, redcap_template
     )
 
   for (i in names(source_cbio_mapping)) {
-    redcap_field <- source_cbio_mapping[[i]][["REDCap Field name"]]
+    redcap_field <- source_cbio_mapping[[i]][["Source Field name"]]
     values_map <- source_cbio_mapping[[i]][["Values"]]
     date_map <- source_cbio_mapping[[i]][["Datediff"]]
     condition_logic <- source_cbio_mapping[[i]][["Condition Logic"]]

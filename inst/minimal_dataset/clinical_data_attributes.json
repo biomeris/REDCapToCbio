@@ -1,11 +1,11 @@
 {
   "PATIENT_ID": {
-    "Attribute type": "CLINICAL",
+    "Attribute type": "PATIENT",
     "Display name": "Patient Identifier",
     "Description": "Patient identifier",
     "Datatype": "STRING",
     "Priority": 1,
-    "REDCap Field name": "record_id"
+    "Source Field name": "record_id"
   },
   "GENDER": {
     "Attribute type": "PATIENT",
@@ -13,7 +13,7 @@
     "Description": "Patient gender.",
     "Datatype": "STRING",
     "Priority": 1,
-    "REDCap Field name": "genere",
+    "Source Field name": "genere",
     "Values": {
       "0": "Male",
       "1": "Female"
@@ -25,7 +25,7 @@
     "Description": "Age at registration of the study",
     "Datatype": "NUMBER",
     "Priority": 1,
-    "REDCap Field name": "eta_arruolamento"
+    "Source Field name": "eta_arruolamento"
   },
   "DIAGNOSIS_DATE": {
     "Attribute type": "PATIENT",
@@ -33,7 +33,7 @@
     "Description": "Date when the tumor was first diagnosed.",
     "Datatype": "STRING",
     "Priority": 1,
-    "REDCap Field name": "data_diagnosi"
+    "Source Field name": "data_diagnosi"
   },
   "TUMOR_BEHAVIOR": {
     "Attribute type": "PATIENT",
@@ -41,7 +41,7 @@
     "Description": "ICD-O behavior classification",
     "Datatype": "STRING",
     "Priority": 1,
-    "REDCap Field name": "comportamento",
+    "Source Field name": "comportamento",
     "Values": {
       "0": "Benign",
       "1": "Unspecified, borderline or uncertain behaviour",
@@ -58,7 +58,7 @@
     "Description": "Tumor Site according to ICD-O classification",
     "Datatype": "STRING",
     "Priority": 1,
-    "REDCap Field name": "topografia"
+    "Source Field name": "topografia"
   },
   "TUMOR_MORPHOLOGY": {
     "Attribute type": "PATIENT",
@@ -66,7 +66,7 @@
     "Description": "Tumor Morphology",
     "Datatype": "STRING",
     "Priority": 1,
-    "REDCap Field name": "morfologia"
+    "Source Field name": "morfologia"
   },
   "TUMOR_GRADE": {
     "Attribute type": "PATIENT",
@@ -74,7 +74,7 @@
     "Description": "Histologic grading criteria of Tumors",
     "Datatype": "STRING",
     "Priority": 1,
-    "REDCap Field name": "grado",
+    "Source Field name": "grado",
     "Values": {
       "1": "Well-differentiated (G1)",
       "2": "Moderately differentiated (G2)",
@@ -89,7 +89,7 @@
     "Description": "Overall survival in months since initial diagonosis.",
     "Datatype": "NUMBER",
     "Priority": 1,
-    "REDCap Field name": "fu_data",
+    "Source Field name": "fu_data",
     "Datediff": {
       "start": "data_diagnosi",
       "end_date_logic": "coalesce(decesso_data,fu_data)",
@@ -102,7 +102,7 @@
     "Description": "Overall patient survival status.",
     "Datatype": "STRING",
     "Priority": 1,
-    "REDCap Field name": "fu_stato",
+    "Source Field name": "fu_stato",
     "Values": {
       "0": "0:LIVING",
       "1": "1:DECEASED"
@@ -114,7 +114,7 @@
     "Description": "Disease free status",
     "Datatype": "STRING",
     "Priority": 1,
-    "REDCap Field name": "fu_stato_malattia",
+    "Source Field name": "fu_stato_malattia",
     "Values": {
       "1": "0:DiseaseFree",
       "2": "1:Recurred/Progressed",
@@ -128,7 +128,7 @@
     "Description": "Date of Death",
     "Datatype": "STRING",
     "Priority": 1,
-    "REDCap Field name": "decesso_data"
+    "Source Field name": "decesso_data"
   },
   "PATIENT_DEATH_REASON": {
     "Attribute type": "PATIENT",
@@ -136,11 +136,151 @@
     "Description": "Text term to identify the cause of death for a patient.",
     "Datatype": "STRING",
     "Priority": 1,
-    "REDCap Field name": "decesso_causa",
+    "Source Field name": "decesso_causa",
     "Values": {
       "1": "Dead of Disease (DOD)",
       "2": "Dead of Other Cause (DOC)",
       "3": "Dead of Unknown Cause (DUC)"
     }
+  },
+  "PATIENT_ID": {
+    "Attribute type": "SAMPLE",
+    "Display name": "Patient Identifier",
+    "Description": "Patient identifier",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "Source Field name": "enrollment_id"
+  },
+  "SAMPLE_ID": {
+    "Attribute type": "SAMPLE",
+    "Display name": "Sample Identifier",
+    "Description": "Sample identifier",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "Source Field name": "vial_code"
+  },
+  "DATE_OF_FREEZING": {
+    "Attribute type": "SAMPLE",
+    "Display name": "Date of freezing",
+    "Description": "Date of freezing.",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "Source Field name": "date_of_freezing"
+  },
+  "SOURCE_TYPE": {
+    "Attribute type": "SAMPLE",
+    "Display name": "Source Type",
+    "Description": "Source type defines where the sample is coming from , ex: Blood, bone marrow . etc.",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "Source Field name": "materialType",
+    "Values": {
+      "UBERON_0000178": "Blood",
+      "OBI_0001468": "Cell specimen",
+      "OBI_0002506": "Pericardial fluid specimen",
+      "OBI_0002514": "Peritoneal fluid specimen",
+      "OBI_0002515": "Pleural fluid specimen",
+      "UBERON_0000479": "Tissue"
+    }
+  },
+  "CELL_TYPE": {
+    "Attribute type": "SAMPLE",
+    "Display name": "Cell Type",
+    "Description": "The type of specimen isolated from blood or bone marrow, ex: Plasma, PBMC, Granulocytes.",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "Source Field name": "material",
+    "Values": {
+      "PLASMA": "Plasma",
+      "CELL": "Cell"
+    }
+  },
+  "SPECIMEN_PRESERVATION_TYPE": {
+    "Attribute type": "SAMPLE",
+    "Display name": "Specimen Preservation Type",
+    "Description": "The method used for preparing the tissue for examination and study.",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "Source Field name": "storageType",
+    "Values": {
+      "FRESH": "Fresh",
+      "FRESH_FROZEN": "Fresh Frozen",
+      "OCT_EMBEDDED": "OCT Embedded",
+      "FORMALIN_FIXED": "Formalin Fixed"
+    }
+  },
+  "DIAGNOSIS_DATE": {
+    "Attribute type": "SAMPLE",
+    "Display name": "Date of diagnosis",
+    "Description": "Date when the tumor was first diagnosed.",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "Source Field name": "diagnosis_date"
+  },
+  "TUMOR_BEHAVIOR": {
+    "Attribute type": "SAMPLE",
+    "Display name": "ICD-O behavior",
+    "Description": "ICD-O behavior classification",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "Source Field name": "diagnosis_type",
+    "Values": {
+      "BENIGN": "Benign",
+      "UNCERTAIN_MALIGNANCY": "Unspecified, borderline or uncertain behaviour",
+      "IN_SITU_CARCINOMA": "Carcinoma in situ",
+      "PRIMARY_MALIGNANT": "Malignant, primary",
+      "METASTATIC_MALIGNANT": "Malignant, metastatic",
+      "UNCERTAIN_MALIGNANT": "Malignant, uncertain whether primary or metastatic",
+      "HEALTHY": "Healthy",
+      "NON_TUMORAL": "Non-tumoral",
+      "NOT_AVAILABLE": "Not yet available"
+    }
+  },
+  "TUMOR_SITE": {
+    "Attribute type": "SAMPLE",
+    "Display name": "Tumor Site ICD-O",
+    "Description": "Tumor Site according to ICD-O classification",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "Source Field name": "diagnosis_site"
+  },
+  "TUMOR_MORPHOLOGY": {
+    "Attribute type": "SAMPLE",
+    "Display name": "Tumor Morphology",
+    "Description": "Tumor Morphology",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "Source Field name": "diagnosis_morphology"
+  },
+  "TUMOR_GRADE": {
+    "Attribute type": "SAMPLE",
+    "Display name": "Tumor Grade",
+    "Description": "Histologic grading criteria of Tumors",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "Source Field name": "diagnosis_grade",
+    "Values": {
+      "G1_WELL_DIFFERENTIATED": "Well-differentiated (G1)",
+      "G2_MODERATELY_DIFFERENTIATED": "Moderately differentiated (G2)",
+      "G3_POORLY_DIFFERENTIATED": "Poorly differentiated (G3)",
+      "G4_UNDIFFERENTIATED": "Undifferentiated (G4)",
+      "GX_INDETERMINATE": "Undetermined (Gx)"
+    }
+  },
+  "VOLUME": {
+    "Attribute type": "SAMPLE",
+    "Display name": "Volume (ml)",
+    "Description": "Volume in milliliters",
+    "Datatype": "NUMBER",
+    "Priority": 1,
+    "Source Field name": "volume"
+  },
+  "CELL_NUM_PER_VIAL": {
+    "Attribute type": "SAMPLE",
+    "Display name": "Cell Number Per Vial",
+    "Description": "Cell Number Per Vial",
+    "Datatype": "NUMBER",
+    "Priority": 1,
+    "Source Field name": "num_cellule"
   }
 }

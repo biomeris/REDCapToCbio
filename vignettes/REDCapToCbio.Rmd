@@ -22,7 +22,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-R Installation
+Introduzione
+===============
+
+Il pacchetto `REDCapToCbio` fornisce funzioni per trasformare automaticamente i dati esportati da REDCap in un formato compatibile con [cBioPortal](https://www.cbioportal.org/).  
+In particolare, genera i file clinici strutturati e i file `meta` richiesti, seguendo le specifiche ufficiali disponibili a questo link:  
+[https://docs.cbioportal.org/file-formats/](https://docs.cbioportal.org/file-formats/).
+
+Installazione del pacchetto in R
 ===============
 
 ```{r, eval = FALSE}
@@ -30,21 +37,37 @@ install.packages("remotes")
 remotes::install_github("biomeris/REDCapToCbio")
 ```
 
-Preparing Data for cBioPortal Import
+Preparazione dei dati per l'importazione in cBioPortal
 ===============
 
-Load the package with the following command:
+Carica il pacchetto con il seguente comando:
 
 ```{r setup}
 library(REDCapToCbio)
 ```
 
-Format and prepare clinical data for cBioPortal integration:
+Per consultare la documentazione relativa ad una specifica funzione, ad esempio `createStudyFolder`, utilizza il comando:
 
 ```{r, eval = FALSE}
-# Create study folder
-output_folder <- createStudyFolder(study_folder = "brca")
+?createStudyFolder
+```
 
+## Creare la cartella dello studio
+
+Come dichiarato nella [documentazione ufficiale](https://docs.cbioportal.org/data-loading/#preparing-study-data), uno studio da caricare in cBioPortal può consistere, in sostanza, in una cartella che contiene tutti i file di dati necessari.
+La funzione `createStudyFolder` permette di creare le cartelle relative ai diversi studi in una location specificata dall'utente.
+
+```{r, eval = FALSE}
+# Creazione della cartella per lo studio 'brca'
+output_folder <- createStudyFolder(
+  study_folder = "brca", 
+  output_path = "/home/documents/cbioportal"
+)
+```
+
+## 
+
+```{r, eval = FALSE}
 # Define cancer study identifier
 cancer_study_identifier <- "brca_joneslab_2013"
 
