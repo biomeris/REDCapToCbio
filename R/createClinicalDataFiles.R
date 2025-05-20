@@ -275,3 +275,48 @@ requestAPIToken <- function(client_id, client_secret, token_url, ssl_verifypeer 
 
   return(access_token)
 }
+
+
+
+
+
+#' Search study by REDCap URL and PID
+#'
+#' Searches and retrieves study metadata from a REDCap instance using the REDCap URL and project identifier (PID).
+#'
+#' @param studylink_url The base URL of the StudyLink application
+#' @param access_token A valid access token used for authentication with the StudyLink API
+#' @param redcap_url The URL of the REDCap instance from which to retrieve the study
+#' @param pid The project ID (PID) of the REDCap project whose study metadata should be retrieved
+#'
+#' @returns The study ID corresponding to the specified REDCap study. Returns only one study or \code{NULL} if the request fails.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' study_id <- getStudyID(
+#'   studylink_url = "https://studylink.example.org",
+#'   access_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+#'   redcap_url = "https://redcap.example.org",
+#'   pid = "1234"
+#' )
+#' }
+getStudyID <- function(studylink_url, access_token, redcap_url, pid) {
+  headers = c('Authorization' = paste("Bearer", access_token))
+  api_url <- paste(studylink_url, "api/v1/study/getByRedcap", sep = "/")
+
+  # Define parameters
+  params <- list(
+    url = redcap_url,
+    pid = pid
+  )
+
+  # Send GET request
+  res <- httr::GET(url = api_url, httr::add_headers(headers), query = params)
+  res_text <- content(res, as = 'text', encoding = 'UTF-8')
+  res_list <- jsonlite::fromJSON(res_text, simplifyVector = FALSE)
+
+  # Extract and return study ID
+  study_id <- res_list[["id"]]
+  return(study_id)
+}
