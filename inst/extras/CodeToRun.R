@@ -1,8 +1,7 @@
 library(REDCapToCbio)
 
 # Create study folder
-# output_folder <- createStudyFolder(study_folder = "brca", output_path = "/path/to/folder")
-output_folder <- createStudyFolder(study_folder = "brca", output_path = "/Users/vramella/tmp")
+output_folder <- createStudyFolder(study_folder = "brca", output_path = "/path/to/folder")
 
 # Define global variables
 cancer_study_identifier <- "brca_joneslab_2013"
@@ -66,4 +65,11 @@ createClinicalDataFiles(
   cancer_study_identifier = cancer_study_identifier,
   datatype = "SAMPLE_ATTRIBUTES",
   clinical_data = vials_details
+)
+
+# Zip study folder
+zipStudyFolder(
+  zipfile = "brca.zip",
+  study_folder = output_folder,
+  output_path = "/path/to/folder"
 )
