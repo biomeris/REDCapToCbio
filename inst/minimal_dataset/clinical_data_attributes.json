@@ -157,7 +157,7 @@
     "Description": "Sample identifier",
     "Datatype": "STRING",
     "Priority": 1,
-    "Source Field name": "vial_code"
+    "Source Field name": "code"
   },
   "DATE_OF_FREEZING": {
     "Attribute type": "SAMPLE",
@@ -225,15 +225,15 @@
     "Priority": 1,
     "Source Field name": "diagnosis_type",
     "Values": {
-      "BENIGN": "Benign",
-      "UNCERTAIN_MALIGNANCY": "Unspecified, borderline or uncertain behaviour",
-      "IN_SITU_CARCINOMA": "Carcinoma in situ",
-      "PRIMARY_MALIGNANT": "Malignant, primary",
-      "METASTATIC_MALIGNANT": "Malignant, metastatic",
-      "UNCERTAIN_MALIGNANT": "Malignant, uncertain whether primary or metastatic",
-      "HEALTHY": "Healthy",
-      "NON_TUMORAL": "Non-tumoral",
-      "NOT_AVAILABLE": "Not yet available"
+      "BENIGN_0": "Benign",
+      "UNCERTAIN_MALIGNANCY_1": "Unspecified, borderline or uncertain behaviour",
+      "IN_SITU_CARCINOMA_2": "Carcinoma in situ",
+      "PRIMARY_MALIGNANT_3": "Malignant, primary",
+      "METASTATIC_MALIGNANT_6": "Malignant, metastatic",
+      "UNCERTAIN_MALIGNANT_9": "Malignant, uncertain whether primary or metastatic",
+      "HEALTHY_10": "Healthy",
+      "NON_TUMORAL_11": "Non-tumoral",
+      "NOT_AVAILABLE_12": "Not yet available"
     }
   },
   "TUMOR_SITE": {

@@ -192,7 +192,7 @@ requestAPIToken <- function(client_id, client_secret, token_url, ssl_verifypeer 
     httr::authenticate(client_id, client_secret),
     body = list(grant_type = "client_credentials"),
     encode = "form",
-    config(ssl_verifypeer = ssl_verifypeer)
+    httr::config(ssl_verifypeer = ssl_verifypeer)
   )
 
   # Check response
