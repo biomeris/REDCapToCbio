@@ -18,7 +18,7 @@ createCancerStudyMetafile(study_folder = output_folder,
 # Write Cancer Type meta file and data file
 createCancerTypeFiles(study_folder = output_folder,
                       type_of_cancer = "brca",
-                      name = "Breast Invasive Carcinoma",
+                      name = "Invasive Breast Carcinoma",
                       dedicated_color = "HotPink",
                       parent_type_of_cancer = "Breast")
 

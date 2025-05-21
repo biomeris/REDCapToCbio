@@ -84,7 +84,7 @@ createClinicalDataFiles <- function(study_folder, cancer_study_identifier, datat
     c(., paste0("#", descriptions)) %>%
     c(., paste0("#", datatypes)) %>%
     c(., paste0("#", priorities)) %>%
-    c(., paste0("#", attr_names))
+    c(., attr_names)
 
   clinical_data_lines <- apply(clinical_data, 1, function(row) {
     row[is.na(row)] <- ""
