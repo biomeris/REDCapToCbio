@@ -65,7 +65,26 @@ output_folder <- createStudyFolder(
 )
 ```
 
-## 
+## Cancer Study
+
+Questa funzione consente di generare il file `meta_study.txt`, richiesto da cBioPortal per descrivere uno studio oncologico. Il file contiene le informazioni principali relative allo studio ed è uno dei file obbligatori previsti dalla struttura standard di caricamento dei dati in cBioPortal.
+
+### Struttura del file
+
+Il file `meta_study.txt` prodotto conterrà i seguenti campi:
+
+- **`type_of_cancer`**: abbreviazione del tipo di tumore, ad esempio `"brca"` per il carcinoma mammario. Se lo studio include più tipi di tumore, è possibile usare `"mixed"`.
+- **`cancer_study_identifier`**: identificativo univoco dello studio, ad esempio `"brca_joneslab_2013"`.
+- **`name`**: nome completo dello studio, es. `"Breast Cancer (Jones Lab 2013)"`.
+- **`description`**: descrizione dello studio. Può includere link a fonti o documentazione esterna.
+- **`citation`** *(opzionale)*: citazione bibliografica dello studio, es. `"TCGA, Nature 2012"`.
+- **`pmid`** *(opzionale)*: uno o più PubMed ID associati, separati da virgole (senza spazi).
+- **`groups`** *(opzionale)*: elenco dei gruppi utenti autorizzati ad accedere allo studio (es. `"PUBLIC;SU2C-PI3K"`). Gli utenti non appartenenti a questi gruppi non vedranno lo studio.
+- **`add_global_case_list`** *(opzionale)*: se impostato a `"true"`, viene generata automaticamente la lista "Tutti i campioni".
+- **`tags_file`** *(opzionale)*: nome del file contenente eventuali tag personalizzati associati allo studio.
+- **`reference_genome`** *(opzionale)*: genoma di riferimento dello studio, ad esempio `"hg19"` o `"hg38"`.
+
+### Esempio di utilizzo
 
 ```{r, eval = FALSE}
 # Define cancer study identifier
@@ -78,19 +97,92 @@ createCancerStudyMetafile(study_folder = output_folder,
                           name = "Breast Cancer (Jones Lab 2013)",
                           description = "Comprehensive profiling of 103 breast cancer samples.",
                           add_global_case_list = TRUE)
+```
 
+## Cancer Type
+
+Se il campo `type_of_cancer` specificato in `meta_study.txt` non è già presente nella tabella dei tipi di cancro (`type_of_cancer`) di cBioPortal, è necessario fornire anche il file `meta_cancer_type.txt`.
+
+Questo file serve a definire un nuovo tipo di tumore, e viene usato da cBioPortal per associare correttamente lo studio al tipo di cancro in fase di caricamento.
+
+### Meta file
+
+Il file `meta_cancer_type.txt` è un semplice file di metadati e contiene le seguenti informazioni:
+
+- **`genetic_alteration_type`**: deve essere impostato a `"CANCER_TYPE"`.
+- **`datatype`**: deve anch'esso essere `"CANCER_TYPE"`.
+- **`data_filename`**: il nome del file contenente l'effettiva definizione del nuovo tipo tumorale (es. `cancer_types.txt`).
+
+### Data file
+
+Il file dei dati (ad esempio `cancer_types.txt`) accompagna il file `meta_cancer_type.txt` e contiene la **definizione dettagliata dei tipi tumorali** personalizzati che si vogliono aggiungere a cBioPortal.
+
+Il file `cancer_types.txt` deve contenere le seguenti **colonne**, nell'ordine specificato:
+
+- **`type_of_cancer`**: abbreviazione del tipo di cancro (es. `"brca"`).
+- **`name`**: nome completo del tipo di cancro (es. `"Breast Invasive Carcinoma"`).
+- **`dedicated_color`**: nome di un colore CSS associato visivamente al tipo tumorale (es. `"HotPink"`). Il colore è usato nell'interfaccia grafica del portale (es. nella OncoTree).
+- **`parent_type_of_cancer`**: abbreviazione del tipo tumorale padre. Se il tipo tumorale non è un sottotipo ma un'entità principale, questo valore può essere `"tissue"` (parola riservata che indica che il tipo va collocato alla **radice dell'albero OncoTree**).
+
+### Esempio di utilizzo
+
+```{r, eval = FALSE}
 # Write Cancer Type meta file and data file
 createCancerTypeFiles(study_folder = output_folder,
                       type_of_cancer = "brca",
-                      name = "Breast Invasive Carcinoma",
+                      name = "Invasive Breast Carcinoma",
                       dedicated_color = "HotPink",
                       parent_type_of_cancer = "Breast")
+```
 
-# Write Clinical Data File - PATIENT_ATTRIBUTES
+## Clinical Data
+
+I dati clinici consentono di associare **attributi clinici** a ciascun paziente e/o campione, oltre a rappresentare il mapping tra `patient_id` e `sample_id`. cBioPortal supporta la presenza di più campioni per paziente.
+
+I dati clinici sono suddivisi in due file distinti:
+
+- **patient clinical file** *(opzionale)*
+- **sample clinical file** *(obbligatorio)*
+
+Entrambi i file devono essere accompagnati da un file di metadati.
+
+### Meta file
+
+Ogni file clinico deve avere un metadato associato, con i seguenti campi obbligatori:
+
+- **`cancer_study_identifier`**: [lo stesso ID specificato in meta_study.txt]
+- **`genetic_alteration_type`**: CLINICAL
+- **`datatype`**: PATIENT_ATTRIBUTES oppure SAMPLE_ATTRIBUTES
+- **`data_filename`**: [nome del file dei dati]
+
+### Data file
+
+Per pazienti e campioni, il file dei dati clinici è una matrice bidimensionale che contiene molteplici attributi clinici.
+
+Le prime quattro righe del file contengono metadati separati da tabulazione (`\t`) e devono **iniziare con il simbolo `#`**.
+Queste righe contengono metadati sui campi definiti nella quinta riga, seguita dai dati reali dalla sesta riga in poi:
+
+- Riga 1: **Display Names**: Nome mostrato di ogni attributo
+- Riga 2: **Attribute Descriptions**: Descrizione più lunga di ogni attributo
+- Riga 3: **Attribute Datatype**: `STRING`, `NUMBER` o `BOOLEAN`
+- Riga 4: **Attribute Priority**: Priorità dell'attributo per la visualizzazione nella Study View
+- Riga 5: **Attribute name for the database**: Deve essere in upper case
+- Riga 6: la prima riga che contiene i dati veri e propri
+
+### Esempio di utilizzo
+
+**PATIENT_ATTRIBUTES**
+
+I dati clinici del paziente vengono estratti da studi REDCap. 
+
+La funzione `redcapToCbio` estrae i dati da uno studio REDCap e li converte in una struttura compatibile con quanto richiesto da cBioPortal.
+Dopo aver estratto i dati, la funzione `createClinicalDataFiles` provvede a creare il file di metadati e il file contenente i dati clinici del paziente.
+
+```{r, eval = FALSE}
 # Export data from REDCap
 redcap_data <- redcapToCbio(
-  redcap_uri = Sys.getenv("RC_URL"),
-  token = Sys.getenv("TOKEN")
+  redcap_uri = "https://redcap-dev-2.ouhsc.edu/redcap/api/",
+  token = "9A068C425B1341D69E83064A2D273A70"
 )
 
 # Write files
@@ -101,3 +193,73 @@ createClinicalDataFiles(
   clinical_data = redcap_data
 )
 ```
+
+**SAMPLE_ATTRIBUTES**
+
+I dati clinici relativi ai campioni associati ai pazienti, estratti dallo studio REDCap, vengono ottenuti tramite le API di StudyLink.
+Per poter effettuare richieste a queste API, è necessario innanzitutto ottenere un token di accesso tramite autenticazione OAuth2.
+
+```{r, eval = FALSE}
+# Request access token
+access_token <- requestAPIToken(
+  client_id = "your-client-id",
+  client_secret = "your-client-secret",
+  token_url = "https://example.com/oauth/token"
+)
+```
+
+Dopo aver ottenuto il token di accesso, è necessario recuperare lo `study_id` utilizzato da StudyLink per identificare lo studio REDCap di interesse. Lo studio REDCap di interesse è specificato all'interno della funzione `getStudyID` tramite URL di REDCap e PID.
+Questo identificativo è richiesto per poter effettuare le successive richieste di estrazione dati clinici e campioni.
+
+```{r, eval = FALSE}
+# Define StudyLink URL
+studylink_url <- "https://studylink.example.org"
+
+# Get study ID
+study_id <- getStudyID(
+  studylink_url = studylink_url,
+  access_token = access_token,
+  redcap_url = "https://redcap-dev-2.ouhsc.edu/redcap/",
+  pid = 913
+)
+```
+
+Una volta ottenuto lo `study_id`, è possibile procedere all'estrazione dei dati dei campioni relativi ai pazienti dello studio. Questa operazione viene effettuata tramite le API di StudyLink, utilizzando lo study_id come parametro per identificare lo studio di interesse.
+
+Analogamente ai dati estratti da REDCap, la funzione `getVialsAttributes` estrae i dati relativi ai campioni e li converte in una struttura compatibile con cBioPortal.
+Dopo aver estratto i dati, la funzione `createClinicalDataFiles` provvede a creare il file di metadati e il file contenente i dati clinici dei campioni.
+
+```{r, eval = FALSE}
+# Get vials details
+vials_details <- getVialsAttributes(
+  studylink_url = studylink_url,
+  access_token = access_token,
+  study_id = study_id
+)
+
+# Write files
+createClinicalDataFiles(
+  study_folder = output_folder,
+  cancer_study_identifier = cancer_study_identifier,
+  datatype = "SAMPLE_ATTRIBUTES",
+  clinical_data = vials_details
+)
+```
+
+## Creare zip della cartella dello studio
+
+Dopo aver generato tutti i file necessari, per facilitare l'import degli studi in cBioPortal, il pacchetto mette a disposizione la funzione `zipStudyFolder` per creare un file zip delle diverse cartelle di studi da importare.
+
+```{r, eval = FALSE}
+# Zip study folder
+zipStudyFolder(
+  zipfile = "brca.zip",
+  study_folder = output_folder,
+  output_path = "/path/to/folder"
+)
+```
+
+CodeToRun.R
+===============
+
+Il pacchetto include anche uno script di esempio, `CodeToRun.R` (in `inst/extras/`), che mostra come utilizzare le principali funzioni per l'esportazione, la trasformazione dei dati e la creazione dei file.
