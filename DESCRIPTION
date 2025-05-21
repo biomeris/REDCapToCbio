@@ -19,7 +19,9 @@ Imports:
     REDCapR,
     rlang,
     tibble,
-    utils
+    tidyr,
+    utils,
+    zip
 Suggests: 
     knitr,
     rmarkdown,

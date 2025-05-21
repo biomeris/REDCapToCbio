@@ -330,7 +330,7 @@ getVialsAttributes <- function(studylink_url, access_token, study_id, mapping_fi
 
     # Return base_info with NA if attributes is empty
     if (length(attributes) == 0) {
-      return(base_info %>% mutate(attribute_name = NA, attribute_value = NA))
+      return(base_info %>% dplyr::mutate(attribute_name = NA, attribute_value = NA))
     }
 
     # Espandi ogni attributo
