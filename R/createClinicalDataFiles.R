@@ -321,7 +321,9 @@ getVialsAttributes <- function(studylink_url, access_token, study_id, mapping_fi
       # diagnosis fields
       diagnosis_type = diagnosis$type,
       diagnosis_site = diagnosis$site,
+      diagnosis_site_lab = diagnosis$siteTerm,
       diagnosis_morphology = diagnosis$morphology,
+      diagnosis_morpho_lab = diagnosis$morphologyTerm,
       diagnosis_grade = diagnosis$grade,
       diagnosis_date = diagnosis$date,
     )
@@ -397,7 +399,7 @@ getVialsAttributes <- function(studylink_url, access_token, study_id, mapping_fi
       )
       # Case 2: difference between dates
     } else if (!is.null(date_map) &&
-               all(c(date_map$start, date_map$end) %in% names(source_data))) {
+               date_map$start %in% names(source_data)) {
       start_date <- date_map$start
       unit <- date_map$unit %||% "days"
 

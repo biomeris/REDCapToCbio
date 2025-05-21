@@ -92,7 +92,7 @@
     "Source Field name": "fu_data",
     "Datediff": {
       "start": "data_diagnosi",
-      "end_date_logic": "coalesce(decesso_data,fu_data)",
+      "end_date_logic": "dplyr::coalesce(decesso_data,fu_data)",
       "unit": "months"
     }
   },
@@ -209,15 +209,7 @@
       "FORMALIN_FIXED": "Formalin Fixed"
     }
   },
-  "DIAGNOSIS_DATE": {
-    "Attribute type": "SAMPLE",
-    "Display name": "Date of diagnosis",
-    "Description": "Date when the tumor was first diagnosed.",
-    "Datatype": "STRING",
-    "Priority": 1,
-    "Source Field name": "diagnosis_date"
-  },
-  "TUMOR_BEHAVIOR": {
+  "BEHAVIOR": {
     "Attribute type": "SAMPLE",
     "Display name": "ICD-O behavior",
     "Description": "ICD-O behavior classification",
@@ -236,7 +228,7 @@
       "NOT_AVAILABLE_12": "Not yet available"
     }
   },
-  "TUMOR_SITE": {
+  "SITE": {
     "Attribute type": "SAMPLE",
     "Display name": "Tumor Site ICD-O",
     "Description": "Tumor Site according to ICD-O classification",
@@ -244,15 +236,31 @@
     "Priority": 1,
     "Source Field name": "diagnosis_site"
   },
-  "TUMOR_MORPHOLOGY": {
+  "PRIMARY_SITE": {
     "Attribute type": "SAMPLE",
-    "Display name": "Tumor Morphology",
-    "Description": "Tumor Morphology",
+    "Display name": "Primary Tumor Site",
+    "Description": "Text term to describe the organ sub-division in an individual with cancer.",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "Source Field name": "diagnosis_site_lab"
+  },
+  "MORPHOLOGY": {
+    "Attribute type": "SAMPLE",
+    "Display name": "Morphology",
+    "Description": "Morphology",
     "Datatype": "STRING",
     "Priority": 1,
     "Source Field name": "diagnosis_morphology"
   },
-  "TUMOR_GRADE": {
+  "PRIMARY_DIAGNOSIS": {
+    "Attribute type": "SAMPLE",
+    "Display name": "Primary Diagnosis",
+    "Description": "Text term used to describe the patient's histologic diagnosis, as described by the World Health Organization's (WHO) International Classification of Diseases for Oncology (ICD-O)",
+    "Datatype": "STRING",
+    "Priority": 1,
+    "Source Field name": "diagnosis_morpho_lab"
+  },
+  "GRADE": {
     "Attribute type": "SAMPLE",
     "Display name": "Tumor Grade",
     "Description": "Histologic grading criteria of Tumors",
