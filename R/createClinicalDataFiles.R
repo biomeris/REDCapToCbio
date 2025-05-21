@@ -105,7 +105,7 @@ createClinicalDataFiles <- function(study_folder, cancer_study_identifier, datat
 #' Convert REDCap data to cBioPortal format
 #'
 #' @inheritParams REDCapR::redcap_read
-#' @param mapping_file A list that contains field-level mapping rules to convert source data into a structure compatible with cBioPortal.
+#' @param mapping_file A JSON file that provides field-level mapping rules to convert source data into a structure compatible with cBioPortal.
 #' @param redcap_template A csv file with the REDCap data dictionary.
 #'
 #' @return A dataframe with data in cBioPortal format
@@ -129,7 +129,7 @@ redcapToCbio <- function(redcap_uri, token, mapping_file = NULL, redcap_template
   }
 
   source_cbio_mapping <- jsonlite::fromJSON(mapping_file) %>%
-    purrr::keep(~ .x$`Attribute type` %in% c("CLINICAL", "PATIENT"))
+    purrr::keep(~ .x$`Attribute type` == "PATIENT")
 
   if (is.null(redcap_template)) {
     redcap_template <- system.file("minimal_dataset", "StandardTemplateCRO_DataDictionary.csv", package = "REDCapToCbio")
@@ -145,7 +145,7 @@ redcapToCbio <- function(redcap_uri, token, mapping_file = NULL, redcap_template
   )$data
 
   # Convert data from REDCap to cBioPortal format
-  cbio_data <- redcap_data %>%
+  redcap_data <- redcap_data %>%
     dplyr::filter(is.na(.data$redcap_repeat_instrument) | .data$redcap_repeat_instrument %in% c("follow_up")) %>%
     dplyr::group_by(.data$record_id) %>%
     dplyr::summarise(
@@ -153,76 +153,7 @@ redcapToCbio <- function(redcap_uri, token, mapping_file = NULL, redcap_template
       dplyr::across(redcap_fields %>% dplyr::filter(.data$Form.Name == "follow_up") %>% dplyr::pull(1), dplyr::last)
     )
 
-  for (i in names(source_cbio_mapping)) {
-    redcap_field <- source_cbio_mapping[[i]][["Source Field name"]]
-    values_map <- source_cbio_mapping[[i]][["Values"]]
-    date_map <- source_cbio_mapping[[i]][["Datediff"]]
-    condition_logic <- source_cbio_mapping[[i]][["Condition Logic"]]
-
-    # Check that redcap_field exists in REDCap data
-    if (!(redcap_field %in% names(cbio_data))) next
-
-    # Case 1: map from list of values
-    if (!is.null(values_map)) {
-      cbio_data[[i]] <- sapply(
-        cbio_data[[redcap_field]],
-        function(x) values_map[[as.character(x)]] %||% NA_character_
-      )
-      # Case 2: difference between dates
-    } else if (!is.null(date_map) &&
-      all(c(date_map$start, date_map$end) %in% names(cbio_data))) {
-      start_date <- date_map$start
-      unit <- date_map$unit %||% "days"
-
-      if (!is.null(date_map$end_date_logic)) {
-        cbio_data$.__temp_end <- cbio_data %>%
-          dplyr::rowwise() %>%
-          dplyr::mutate(.temp = eval(parse(text = date_map$end_date_logic))) %>%
-          dplyr::ungroup() %>%
-          dplyr::pull(.data$.temp)
-        end_date <- ".__temp_end"
-      } else if (!is.null(date_map$end) && date_map$end %in% names(cbio_data)) {
-        end_date <- date_map$end
-      } else {
-        next
-      }
-
-      # difference in ("auto", "secs", "mins", "hours", "days", "weeks")
-      if (unit %in% c("auto", "secs", "mins", "hours", "days", "weeks")) {
-        cbio_data[[i]] <- as.numeric(difftime(
-          cbio_data[[end_date]],
-          cbio_data[[start_date]],
-          units = unit
-        ))
-        # diffenrence in months
-      } else if (unit == "months") {
-        cbio_data[[i]] <- as.numeric(difftime(
-          cbio_data[[end_date]],
-          cbio_data[[start_date]],
-          units = "days"
-        )) / (365.25 / 12)
-        # difference in years
-      } else if (unit == "years") {
-        cbio_data[[i]] <- as.numeric(difftime(
-          cbio_data[[end_date]],
-          cbio_data[[start_date]],
-          units = "days"
-        )) / (365.25)
-      }
-      # Case 3: copy the original value from REDCap
-    } else {
-      cbio_data[[i]] <- cbio_data[[redcap_field]]
-    }
-
-    # Apply Condition Logic
-    if (!is.null(condition_logic) && nzchar(condition_logic)) {
-      condition_mask <- with(cbio_data, eval(parse(text = condition_logic)))
-      cbio_data[[i]][!condition_mask] <- NA
-    }
-  }
-
-  cbio_data <- cbio_data %>%
-    dplyr::select(dplyr::all_of(names(source_cbio_mapping)))
+  cbio_data <- .source2CbioMap(source_data = redcap_data, source_cbio_mapping = source_cbio_mapping)
 
   return(cbio_data)
 }
@@ -313,10 +244,212 @@ getStudyID <- function(studylink_url, access_token, redcap_url, pid) {
 
   # Send GET request
   res <- httr::GET(url = api_url, httr::add_headers(headers), query = params)
-  res_text <- content(res, as = 'text', encoding = 'UTF-8')
+  res_text <- httr::content(res, as = 'text', encoding = 'UTF-8')
   res_list <- jsonlite::fromJSON(res_text, simplifyVector = FALSE)
 
   # Extract and return study ID
   study_id <- res_list[["id"]]
   return(study_id)
+}
+
+
+
+
+
+#' Get all vials with details and attributes by study id
+#'
+#' @inheritParams getStudyID
+#' @param study_id The study ID
+#' @param mapping_file A JSON file that provides field-level mapping rules to convert source data into a structure compatible with cBioPortal.
+#'
+#' @returns A dataframe with data in cBioPortal format
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' study_id <- getStudyID(
+#'   studylink_url = "https://studylink.example.org",
+#'   access_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+#'   redcap_url = "https://redcap.example.org",
+#'   pid = "1234"
+#' )
+#' }
+getVialsAttributes <- function(studylink_url, access_token, study_id, mapping_file = NULL) {
+  # Read mapping file and filter by attribute type (patient or sample)
+  if (is.null(mapping_file)) {
+    mapping_file <- system.file("minimal_dataset", "clinical_data_attributes.json", package = "REDCapToCbio")
+  }
+
+  source_cbio_mapping <- jsonlite::fromJSON(mapping_file) %>%
+    purrr::keep(~ .x$`Attribute type` == "SAMPLE")
+
+  # Get all vials with details and attributes by study id
+  headers = c('Authorization' = paste("Bearer", access_token))
+  api_url <- paste(studylink_url, "/api/v1/vial/detailsAndAttributes", study_id, sep = "/")
+
+  params <- list(
+    studyId = study_id
+  )
+
+  res <- httr::GET(url = api_url, httr::add_headers(headers), query = params)
+  res_text <- httr::content(res, as = 'text', encoding = 'UTF-8')
+  vial_list <- jsonlite::fromJSON(res_text, simplifyVector = FALSE)
+
+  # Extract vials details from list and create a dataframe
+  vial_df <- purrr::map_dfr(vial_list, function(x) {
+    vial <- x$vial
+    sampleDTO <- vial$sampleDetail$sampleDTO
+    diagnosis <- sampleDTO$diagnosis
+    attributes <- x$attributes
+
+    # Common fields (same across all attributes)
+    base_info <- tibble::tibble(
+      code = vial$code,
+      date_of_freezing = vial$dateOfFreezing,
+      material = vial$material,
+      status = vial$status,
+      partialThawingDateTime = vial$partialThawingDateTime,
+      thawingDateTime = vial$thawingDateTime,
+
+      # sampleDetail fields
+      enrollment_id = vial$sampleDetail$enrollmentPseudoId,
+
+      # sampleDTO fields
+      materialType = sampleDTO$materialType,
+      storageType = sampleDTO$storageType,
+
+      # diagnosis fields
+      diagnosis_type = diagnosis$type,
+      diagnosis_site = diagnosis$site,
+      diagnosis_morphology = diagnosis$morphology,
+      diagnosis_grade = diagnosis$grade,
+      diagnosis_date = diagnosis$date,
+    )
+
+    # Return base_info with NA if attributes is empty
+    if (length(attributes) == 0) {
+      return(base_info %>% mutate(attribute_name = NA, attribute_value = NA))
+    }
+
+    # Espandi ogni attributo
+    attr_df <- purrr::map_dfr(attributes, function(attr) {
+      tibble::tibble(
+        attribute_name = attr$name,
+        attribute_value = attr$value
+      )
+    })
+
+    # Aggiungi base_info a ogni attributo
+    dplyr::bind_cols(
+      base_info[rep(1, nrow(attr_df)), ],
+      attr_df
+    )
+  })
+
+  # Returns one row per `vial`, with each attribute represented as a separate column.
+  vial_wide <- vial_df %>%
+    tidyr::pivot_wider(names_from = attribute_name, values_from = attribute_value)
+
+  # Convert data to cBioPortal format
+  cbio_data <- .source2CbioMap(source_data = vial_wide, source_cbio_mapping = source_cbio_mapping)
+
+  return(cbio_data)
+
+}
+
+
+
+
+
+#' Convert source-like Data to cBioPortal Format
+#'
+#' This function takes a source data frame (e.g., extracted from REDCap), applies a predefined field mapping,
+#' and returns a data frame formatted according to the structure expected by cBioPortal.
+#'
+#' @param source_data A data frame containing the source data to be mapped
+#' @param source_cbio_mapping A named list defining how fields from the source data should be mapped to cBioPortal fields
+#'
+#' @returns A data frame compatible with the cBioPortal data structure.
+#'
+#' @examples
+#' \dontrun{
+#' cbio_df <- .source2CbioMap(
+#'   source_data = redcap_data,
+#'   source_cbio_mapping = redcap_cbio_mapping
+#' )
+#' }
+.source2CbioMap <- function(source_data, source_cbio_mapping) {
+  # Map each source field to the corresponding cBioPortal clinical data field
+  for (i in names(source_cbio_mapping)) {
+    source_field <- source_cbio_mapping[[i]][["Source Field name"]]
+    values_map <- source_cbio_mapping[[i]][["Values"]]
+    date_map <- source_cbio_mapping[[i]][["Datediff"]]
+    condition_logic <- source_cbio_mapping[[i]][["Condition Logic"]]
+
+    # Check that source_field exists in source data
+    if (!(source_field %in% names(source_data))) next
+
+    # Case 1: map from list of values
+    if (!is.null(values_map)) {
+      source_data[[i]] <- sapply(
+        source_data[[source_field]],
+        function(x) values_map[[as.character(x)]] %||% NA_character_
+      )
+      # Case 2: difference between dates
+    } else if (!is.null(date_map) &&
+               all(c(date_map$start, date_map$end) %in% names(source_data))) {
+      start_date <- date_map$start
+      unit <- date_map$unit %||% "days"
+
+      if (!is.null(date_map$end_date_logic)) {
+        source_data$.__temp_end <- source_data %>%
+          dplyr::rowwise() %>%
+          dplyr::mutate(.temp = eval(parse(text = date_map$end_date_logic))) %>%
+          dplyr::ungroup() %>%
+          dplyr::pull(.data$.temp)
+        end_date <- ".__temp_end"
+      } else if (!is.null(date_map$end) && date_map$end %in% names(source_data)) {
+        end_date <- date_map$end
+      } else {
+        next
+      }
+
+      # difference in ("auto", "secs", "mins", "hours", "days", "weeks")
+      if (unit %in% c("auto", "secs", "mins", "hours", "days", "weeks")) {
+        source_data[[i]] <- as.numeric(difftime(
+          source_data[[end_date]],
+          source_data[[start_date]],
+          units = unit
+        ))
+        # diffenrence in months
+      } else if (unit == "months") {
+        source_data[[i]] <- as.numeric(difftime(
+          source_data[[end_date]],
+          source_data[[start_date]],
+          units = "days"
+        )) / (365.25 / 12)
+        # difference in years
+      } else if (unit == "years") {
+        source_data[[i]] <- as.numeric(difftime(
+          source_data[[end_date]],
+          source_data[[start_date]],
+          units = "days"
+        )) / (365.25)
+      }
+      # Case 3: copy the original value from REDCap
+    } else {
+      source_data[[i]] <- source_data[[source_field]]
+    }
+
+    # Apply Condition Logic
+    if (!is.null(condition_logic) && nzchar(condition_logic)) {
+      condition_mask <- with(source_data, eval(parse(text = condition_logic)))
+      source_data[[i]][!condition_mask] <- NA
+    }
+  }
+
+  cbio_data <- source_data %>%
+    dplyr::select(dplyr::all_of(names(source_cbio_mapping)))
+
+  return(cbio_data)
 }

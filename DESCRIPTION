@@ -12,11 +12,13 @@ URL: https://github.com/biomeris/REDCapToCbio
 BugReports: https://github.com/biomeris/REDCapToCbio/issues
 Imports: 
     dplyr,
+    httr,
     jsonlite,
     magrittr,
     purrr (>= 0.3.0),
     REDCapR,
     rlang,
+    tibble,
     utils
 Suggests: 
     knitr,

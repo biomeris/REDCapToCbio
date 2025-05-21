@@ -16,7 +16,7 @@ Required.}
 \item{token}{The user-specific string that serves as the password for a
 project.  Required.}
 
-\item{mapping_file}{A list that contains field-level mapping rules to convert source data into a structure compatible with cBioPortal.}
+\item{mapping_file}{A JSON file that provides field-level mapping rules to convert source data into a structure compatible with cBioPortal.}
 
 \item{redcap_template}{A csv file with the REDCap data dictionary.}
 }
