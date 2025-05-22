@@ -23,7 +23,7 @@ zipStudyFolder <- function(zipfile, study_folder, output_path = getwd()) {
   files_to_zip <- list.files(study_folder, recursive = TRUE, full.names = FALSE)
 
   # Execute the zip from within the source folder (avoids including parent directories)
-  old_wd <- setwd(folder_path)
+  old_wd <- setwd(study_folder)
   zip::zip(zipfile = zip_dest, files = files_to_zip)
   setwd(old_wd)
 }
