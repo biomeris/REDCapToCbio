@@ -7,7 +7,7 @@
 #' @param description A description of the cancer study. This description may contain one or more URLs to relevant information.
 #' @param citation (Optional) A relevant citation.
 #' @param pmid (Optional) One or more relevant pubmed ids (comma separated without whitespace). If used, the field citation has to be filled, too.
-#' @param groups (Optional) When using an authenticating cBioPortal, lists the user-groups that are allowed access to this study. Multiple groups are separated with a semicolon ";". The study will be invisible to users not in at least one of the listed groups, as if it wasn't loaded at all. See [User-Authorization](https://docs.cbioportal.org/deployment/authorization-and-authentication/user-authorization/) for more information on groups
+#' @param groups (Optional) When using an authenticating cBioPortal, lists the user-groups that are allowed access to this study. Multiple groups are separated with a semicolon ";". The study will be invisible to users not in at least one of the listed groups, as if it wasn't loaded at all. See [User-Authorization](https://docs.cbioportal.org/deployment/authorization-and-authentication/user-authorization/) for more information on groups. Default to 'PUBLIC'
 #' @param add_global_case_list (Optional) Set to 'true' if you would like the "All samples" case list to be generated automatically for you. See also [Case list](https://docs.cbioportal.org/file-formats/#case-lists)
 #' @param tags_file (Optional) The file name containing custom study tags for the [study tags](https://docs.cbioportal.org/file-formats/#study-tags-file).
 #' @param reference_genome (Optional) The study reference genome (e.g. hg19, hg38). Without specifying this property, the study will be assigned to the reference genome specified in application.properties (property ucsc.build).
@@ -24,7 +24,7 @@
 #'   add_global_case_list = TRUE
 #' )
 #' }
-createCancerStudyMetafile <- function(study_folder, type_of_cancer, cancer_study_identifier, name, description, citation = NULL, pmid = NULL, groups = NULL, add_global_case_list = NULL, tags_file = NULL, reference_genome = NULL) {
+createCancerStudyMetafile <- function(study_folder, type_of_cancer, cancer_study_identifier, name, description, citation = NULL, pmid = NULL, groups = "PUBLIC", add_global_case_list = NULL, tags_file = NULL, reference_genome = NULL) {
   # Create list with all fields
   fields_list <- mget(c("type_of_cancer", "cancer_study_identifier", "name", "description", "citation", "pmid", "groups", "add_global_case_list", "tags_file", "reference_genome"), envir = environment())
 

@@ -12,7 +12,7 @@ createCancerStudyMetafile(
   description,
   citation = NULL,
   pmid = NULL,
-  groups = NULL,
+  groups = "PUBLIC",
   add_global_case_list = NULL,
   tags_file = NULL,
   reference_genome = NULL
@@ -33,7 +33,7 @@ createCancerStudyMetafile(
 
 \item{pmid}{(Optional) One or more relevant pubmed ids (comma separated without whitespace). If used, the field citation has to be filled, too.}
 
-\item{groups}{(Optional) When using an authenticating cBioPortal, lists the user-groups that are allowed access to this study. Multiple groups are separated with a semicolon ";". The study will be invisible to users not in at least one of the listed groups, as if it wasn't loaded at all. See \href{https://docs.cbioportal.org/deployment/authorization-and-authentication/user-authorization/}{User-Authorization} for more information on groups}
+\item{groups}{(Optional) When using an authenticating cBioPortal, lists the user-groups that are allowed access to this study. Multiple groups are separated with a semicolon ";". The study will be invisible to users not in at least one of the listed groups, as if it wasn't loaded at all. See \href{https://docs.cbioportal.org/deployment/authorization-and-authentication/user-authorization/}{User-Authorization} for more information on groups. Default to 'PUBLIC'}
 
 \item{add_global_case_list}{(Optional) Set to 'true' if you would like the "All samples" case list to be generated automatically for you. See also \href{https://docs.cbioportal.org/file-formats/#case-lists}{Case list}}
 
