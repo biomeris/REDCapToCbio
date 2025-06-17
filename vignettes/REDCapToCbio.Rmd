@@ -175,7 +175,8 @@ Queste righe contengono metadati sui campi definiti nella quinta riga, seguita d
 
 I dati clinici del paziente vengono estratti da studi REDCap. 
 
-La funzione `redcapToCbio` estrae i dati da uno studio REDCap e li converte in una struttura compatibile con quanto richiesto da cBioPortal.
+La funzione `redcapToCbio` estrae i dati da uno studio REDCap e li converte in una struttura compatibile con quanto richiesto da cBioPortal. Per esportare i dati da REDCap, l'utente deve disporre di un token API associato al progetto REDCap di interesse.
+
 Dopo aver estratto i dati, la funzione `createClinicalDataFiles` provvede a creare il file di metadati e il file contenente i dati clinici del paziente.
 
 ```{r, eval = FALSE}
@@ -193,6 +194,8 @@ createClinicalDataFiles(
   clinical_data = redcap_data
 )
 ```
+
+NOTA: per poter esportare correttamente i dati da uno studio REDCap, l'utente deve disporre dei privilegi di "API Export" e "Data Access Group" all'interno del progetto.
 
 **SAMPLE_ATTRIBUTES**
 
