@@ -298,34 +298,34 @@ getVialsAttributes <- function(studylink_url, access_token, study_id, mapping_fi
   # Extract vials details from list and create a dataframe
   vial_df <- purrr::map_dfr(vial_list, function(x) {
     vial <- x$vial
-    sampleDTO <- vial$sampleDetail$sampleDTO
+    sampleDTO <- vial$sampleDetailDTO$sampleDTO
     diagnosis <- sampleDTO$diagnosis
     attributes <- x$attributes
 
     # Common fields (same across all attributes)
     base_info <- tibble::tibble(
-      code = vial$code,
-      date_of_freezing = vial$dateOfFreezing,
-      material = vial$material,
-      status = vial$status,
-      partialThawingDateTime = vial$partialThawingDateTime,
-      thawingDateTime = vial$thawingDateTime,
+      code = vial$vialDTO$code,
+      date_of_freezing = vial$vialDTO$dateOfFreezing,
+      material = ifelse(!is.null(vial$vialDTO$material), vial$vialDTO$material, NA),
+      status = ifelse(!is.null(vial$vialDTO$status), vial$vialDTO$status, NA),
+      partialThawingDateTime = ifelse(!is.null(vial$vialDTO$partialThawingDateTime), vial$vialDTO$partialThawingDateTime, NA),
+      thawingDateTime = ifelse(!is.null(vial$vialDTO$thawingDateTime), vial$vialDTO$thawingDateTime, NA),
 
       # sampleDetail fields
-      enrollment_id = vial$sampleDetail$enrollmentPseudoId,
+      enrollment_id = vial$sampleDetailDTO$enrollmentPseudoId,
 
       # sampleDTO fields
       materialType = sampleDTO$materialType,
       storageType = sampleDTO$storageType,
 
       # diagnosis fields
-      diagnosis_type = diagnosis$type,
-      diagnosis_site = diagnosis$site,
-      diagnosis_site_lab = diagnosis$siteTerm,
-      diagnosis_morphology = diagnosis$morphology,
-      diagnosis_morpho_lab = diagnosis$morphologyTerm,
-      diagnosis_grade = diagnosis$grade,
-      diagnosis_date = diagnosis$date,
+      diagnosis_type = ifelse(!is.null(diagnosis$type), diagnosis$type, NA),
+      diagnosis_site = ifelse(!is.null(diagnosis$site), diagnosis$site, NA),
+      diagnosis_site_lab = ifelse(!is.null(diagnosis$siteTerm), diagnosis$siteTerm, NA),
+      diagnosis_morphology = ifelse(!is.null(diagnosis$morphology), diagnosis$morphology, NA),
+      diagnosis_morpho_lab = ifelse(!is.null(diagnosis$morphologyTerm), diagnosis$morphologyTerm, NA),
+      diagnosis_grade = ifelse(!is.null(diagnosis$grade), diagnosis$grade, NA),
+      diagnosis_date = ifelse(!is.null(diagnosis$date), diagnosis$date, NA),
     )
 
     # Return base_info with NA if attributes is empty
